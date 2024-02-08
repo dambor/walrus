@@ -1,2 +1,2 @@
-# walrus
+# walrus.ai
 self development
