@@ -7,7 +7,7 @@ type Config struct {
 	DBHost     string `mapstructure:"SQL_HOST"`
 	DBUsername string `mapstructure:"SQL_USER"`
 	DBPassword string `mapstructure:"SQL_PASSWORD"`
-	DBName     string `mapstructure:"SQL_NAME"`
+	DBName     string `mapstructure:"SQL_DB"`
 	DBPort     string `mapstructure:"SQL_PORT"`
 
 	// Redis Setup

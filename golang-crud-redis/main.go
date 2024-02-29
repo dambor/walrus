@@ -3,7 +3,12 @@ package main
 import (
 	"fmt"
 	"go-crud-redis-example/config"
+	"go-crud-redis-example/controller"
 	"go-crud-redis-example/database"
+	"go-crud-redis-example/model"
+	"go-crud-redis-example/repo"
+	"go-crud-redis-example/router"
+	"go-crud-redis-example/usecase"
 	"log"
 
 	"github.com/go-redis/redis/v8"
@@ -25,6 +30,7 @@ func main() {
 	}
 	// mysql
 	db := database.ConnectionMySQLDb(&loadConfig)
+	db.AutoMigrate(&model.Novel{})
 
 	// redis
 	rdb := database.ConnectionRedisDb(&loadConfig)
@@ -35,7 +41,13 @@ func main() {
 func startServer(db *gorm.DB, rdb *redis.Client) {
 	app := fiber.New()
 
-	err := app.Listen(":3400")
+	novelRepo := repo.NewNovelRepo(db, rdb)
+	novelUseCase := usecase.NewNovelUseCase(novelRepo)
+	novelController := controller.NewNovelController(novelUseCase)
+
+	routes := router.NewRouter(app, novelController)
+
+	err := routes.Listen(":3400")
 	if err != nil {
 		panic(err)
 	}
